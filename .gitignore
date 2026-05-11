@@ -4,3 +4,12 @@ node_modules/
 .vercel/
 dist/
 app.config.timestamp_*.js
+
+# Wasta app
+wasta/node_modules/
+wasta/.next/
+wasta/dev.db
+wasta/dev.db-shm
+wasta/dev.db-wal
+wasta/prisma/dev.db
+wasta/.env

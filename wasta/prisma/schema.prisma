@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  name             String
+  password         String?
+  role             Role      @default(SEEKER)
+  avatarUrl        String?
+  headline         String?
+  resumeUrl        String?
+  linkedinUrl      String?
+  createdAt        DateTime  @default(now())
+  creditsBalance   Int       @default(5)
+  creditsUsedMonth Int       @default(0)
+  creditLimitMonth Int       @default(5)
+  planTier         PlanTier  @default(FREE)
+
+  jobPostings      JobPosting[]
+  referralRequests ReferralRequest[] @relation("SeekerRequests")
+  referralsMade    ReferralRequest[] @relation("ReferrerRequests")
+  accounts         Account[]
+  sessions         Session[]
+}
+
+enum Role {
+  SEEKER
+  REFERRER
+}
+
+enum PlanTier {
+  FREE
+  STARTER
+  PRO
+  UNLIMITED
+}
+
+model JobPosting {
+  id               String        @id @default(cuid())
+  title            String
+  company          String
+  location         String
+  locationType     LocationType  @default(ONSITE)
+  salaryMin        Int?
+  salaryMax        Int?
+  currency         String        @default("AED")
+  description      String
+  requirements     String
+  status           PostingStatus @default(ACTIVE)
+  creditCost       Int           @default(2)
+  createdAt        DateTime      @default(now())
+  expiresAt        DateTime?
+  referrer         User          @relation(fields: [referrerId], references: [id])
+  referrerId       String
+
+  referralRequests ReferralRequest[]
+}
+
+enum LocationType {
+  REMOTE
+  ONSITE
+  HYBRID
+}
+
+enum PostingStatus {
+  ACTIVE
+  PAUSED
+  EXPIRED
+}
+
+model ReferralRequest {
+  id           String        @id @default(cuid())
+  pitch        String
+  status       RequestStatus @default(PENDING)
+  creditCost   Int           @default(1)
+  createdAt    DateTime      @default(now())
+  respondedAt  DateTime?
+  seeker       User          @relation("SeekerRequests", fields: [seekerId], references: [id])
+  seekerId     String
+  referrer     User          @relation("ReferrerRequests", fields: [referrerId], references: [id])
+  referrerId   String
+  jobPosting   JobPosting    @relation(fields: [jobPostingId], references: [id])
+  jobPostingId String
+
+  messages     Message[]
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model Message {
+  id                String          @id @default(cuid())
+  content           String
+  senderId          String
+  createdAt         DateTime        @default(now())
+  referralRequest   ReferralRequest @relation(fields: [referralRequestId], references: [id])
+  referralRequestId String
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

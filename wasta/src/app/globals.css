@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #0F1F3D;
+  --navy-light: #1A2F55;
+  --gold: #E8A020;
+  --gold-light: #FDF3E3;
+  --gold-dark: #B87A10;
+  --teal: #1A8C72;
+  --teal-light: #E1F5EE;
+  --surface: #F8F7F4;
+  --surface-2: #EFEDE8;
+  --border: #E2DDD5;
+  --text-primary: #0F1F3D;
+  --text-secondary: #6B6760;
+  --text-muted: #9B9790;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+html {
+  font-family: 'Nunito', system-ui, sans-serif;
+  background-color: var(--surface);
+  color: var(--text-primary);
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Sora', system-ui, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .font-sora {
+    font-family: 'Sora', system-ui, sans-serif;
+  }
+
+  .font-nunito {
+    font-family: 'Nunito', system-ui, sans-serif;
+  }
+}
+
+/* Page transition animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: fadeInUp 200ms ease-out;
+}
+
+/* Credit badge glow pulse */
+@keyframes creditGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 160, 32, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(232, 160, 32, 0); }
+}
+
+.credit-pulse {
+  animation: creditGlow 600ms ease-out;
+}
+
+/* Success checkmark SVG animation */
+@keyframes checkDraw {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+.check-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: checkDraw 600ms ease forwards;
+}
+
+/* Loading skeleton pulse */
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.skeleton-pulse {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+/* Radix Dialog animations */
+@keyframes dialogOverlayShow {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialogContentShow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+[data-state='open'][data-radix-dialog-overlay] {
+  animation: dialogOverlayShow 150ms ease;
+}
+
+[data-state='open'][data-radix-dialog-content] {
+  animation: dialogContentShow 150ms ease;
+}
