@@ -27,6 +27,7 @@
     "vite": "^6.3.5"
   },
   "overrides": {
+    "@tanstack/react-store": "0.9.3",
     "@tanstack/react-start-plugin": "1.120.17",
     "@tanstack/react-start-server": "1.120.20",
     "@tanstack/react-start-client": "1.120.20",
